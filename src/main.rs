@@ -10,23 +10,37 @@ pub mod chunk;
 pub mod disassembler;
 pub mod opcode;
 pub mod vm;
+pub mod scanner;
+pub mod token;
 
-use crate::chunk::Chunk;
+// use crate::chunk::Chunk;
 
-use crate::opcode::OpCode;
-use crate::vm::VM;
+// use crate::opcode::OpCode;
+// use crate::vm::VM;
+
+use std::env;
+use std::fs::File;
+use std::io::prelude::*;
+
+fn main() -> std::io::Result<()> {
+    // let chunk = Chunk::new();
+    // let mut vm = VM::new(chunk);
+    // let constant: usize = vm.chunk.add_constant(20 as f64);
+    // vm.chunk.write_chunk(OpCode::OpConstant as u8, 100);
+    // vm.chunk.write_chunk(constant as u8, 100);
+    // vm.chunk.write_chunk(OpCode::OpNegate as u8, 100);
+    // vm.chunk.write_chunk(OpCode::OpReturn as u8, 100);
+
+    // vm.interpret();
 
 
 
-fn main() {
-    let chunk = Chunk::new();
-    let mut vm = VM::new(chunk);
-    let constant: usize = vm.chunk.add_constant(1.2);
-    vm.chunk.write_chunk(OpCode::OpConstant as u8, 100);
-    vm.chunk.write_chunk(constant as u8, 100);
-    vm.chunk.write_chunk(OpCode::OpReturn as u8, 100);
+    let args: Vec<String> = env::args().collect();
+    let mut file = File::open(&args[0])?;
+    let mut contents = String::new();
 
-    vm.interpret();
-    // disassembler.disassemble_chunk(&vm.chunk, String::from("test chunk"));
+    file.read_to_string(&mut contents);
+
+    Ok(())
 
 }

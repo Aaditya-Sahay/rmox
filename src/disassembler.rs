@@ -31,6 +31,7 @@ impl Disassembler {
         // TODO replace this later with a safe solution, right now it assumes that it is always going to be of Type Enum
         match instruction { 
             OpCode::OpReturn => return Disassembler::simple_instruction("OpReturn", offset),
+            OpCode::OpNegate => return Disassembler::simple_instruction("OpNegate", offset),
             OpCode::OpConstant => return Disassembler::constant_instruction(&chunk, "OpConstant", offset),
             _ => {
                 println!("Unknown opcode {}", instruction as u8);
