@@ -69,9 +69,8 @@ impl VM {
                 OpCode::OpReturn => {
                     let x = self.stack.pop();
                     println!("'{}'", x.unwrap());
-                    return InterpretResult::InterpretOk
+                    return InterpretResult::InterpretOk;
                 }
-   
             }
         }
     }
@@ -87,7 +86,7 @@ impl VM {
             "mult" => self.stack.push(a * b),
             "divide" => self.stack.push(a / b),
             "mod" => self.stack.push(a % b),
-            &_ => println!("unknown operator")
+            &_ => println!("unknown operator"),
         }
     }
 }

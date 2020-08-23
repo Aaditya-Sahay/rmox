@@ -1,4 +1,3 @@
-
 #[repr(u8)]
 pub enum OpCode {
     OpConstant,
@@ -6,8 +5,7 @@ pub enum OpCode {
     OpSub,
     OpMult,
     OpDiv,
-    OpMod, // modulus operator 
+    OpMod, // modulus operator
     OpNegate,
-    OpReturn
+    OpReturn,
 }
-
