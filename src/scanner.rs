@@ -260,6 +260,7 @@ impl Scanner {
             start: self.start,
             length: (self.current as usize - self.start as usize),
             line: self.line,
+            message: None
         }
     }
     /// it advances scanner.current by 1
@@ -274,6 +275,7 @@ impl Scanner {
             start: self.start,
             length: message.len(),
             line: self.line,
+            message: Some(message.to_string())
         }
     }
 }

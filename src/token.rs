@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types)]
 
-#[derive(Debug)]
+#[derive(Debug, Copy,Clone, PartialEq)]
 pub enum TokenType {
     // Single-character tokens.
     LEFT_PAREN,
@@ -53,11 +53,12 @@ pub enum TokenType {
     EOF,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Token {
     pub token_type: TokenType,
     pub start: usize,
     pub length: usize,
     pub line: u64,
+    pub message: Option<String>
 }
 

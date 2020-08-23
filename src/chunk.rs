@@ -2,7 +2,7 @@
 pub struct Chunk {
     pub code: Vec<u8>,
     pub constants: Vec<f64>,
-    pub lines: Vec<u32>,
+    pub lines: Vec<u64>,
 }
 
 impl Chunk {
@@ -13,7 +13,7 @@ impl Chunk {
             lines: Vec::new(),
         }
     }
-    pub fn write_chunk(&mut self, byte: u8, line: u32) {
+    pub fn write_chunk(&mut self, byte: u8, line: u64) {
         self.code.push(byte);
         self.lines.push(line);
     }
