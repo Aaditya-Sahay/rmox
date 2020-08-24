@@ -15,8 +15,7 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
-
-use crate::vm::{VM, InterpretResult};
+use crate::vm::{VM,InterpretResult};
 use crate::chunk::Chunk;
 use  crate::compiler::Compiler;
 
@@ -53,6 +52,7 @@ pub fn interpret(source: String) -> InterpretResult {
     if !compiled {
         return InterpretResult::InterpretCompileError
     }
+
 
     let mut vm = VM::new(chunk);
 

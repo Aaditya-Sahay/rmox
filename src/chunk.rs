@@ -17,8 +17,8 @@ impl Chunk {
         self.code.push(byte);
         self.lines.push(line);
     }
-    pub fn add_constant(&mut self, value: f64) -> usize {
+    pub fn add_constant(&mut self, value: f64) -> u8 {
         self.constants.push(value);
-        return self.constants.len() - 1;
+        return (self.constants.len() - 1) as u8;
     }
 }

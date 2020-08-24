@@ -4,7 +4,7 @@ use crate::opcode::OpCode;
 pub struct Disassembler {}
 
 impl Disassembler {
-    pub fn disassemble_chunk(&mut self, chunk: &Chunk, name: String) {
+    pub fn disassemble_chunk(chunk: &Chunk, name: String) {
         println!("== {} ==", name);
 
         let mut offset: usize = 0;
@@ -27,13 +27,18 @@ impl Disassembler {
         match instruction {
             OpCode::OpReturn => return Disassembler::simple_instruction("OpReturn", offset),
             OpCode::OpNegate => return Disassembler::simple_instruction("OpNegate", offset),
+            OpCode::OpAdd => return Disassembler::simple_instruction("OpAdd", offset),
+            OpCode::OpSub => return Disassembler::simple_instruction("OpSub", offset),
+            OpCode::OpMult => return Disassembler::simple_instruction("OpMult", offset),
+            OpCode::OpDiv => return Disassembler::simple_instruction("OpDiv", offset),
+            OpCode::OpMod => return Disassembler::simple_instruction("OpMod",offset),
             OpCode::OpConstant => {
                 return Disassembler::constant_instruction(&chunk, "OpConstant", offset)
-            }
-            _ => {
-                println!("Unknown opcode {}", instruction as u8);
-                return offset + 1;
-            }
+            },
+            // _ => {
+            //     println!("Unknown opcode {}", instruction as u8);
+            //     return offset + 1;
+            // }
         }
     }
 

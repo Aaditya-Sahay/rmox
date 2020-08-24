@@ -119,7 +119,7 @@ impl Scanner {
 
     fn skip_whitespace(&mut self) {
         loop {
-            if self.is_end() {break;}
+      
             let c = self.peek();
            
             match c {

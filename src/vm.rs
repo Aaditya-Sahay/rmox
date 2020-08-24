@@ -1,5 +1,4 @@
 use crate::chunk::Chunk;
-use crate::disassembler::Disassembler;
 use crate::opcode::OpCode;
 
 pub struct Settings {
@@ -42,8 +41,6 @@ impl VM {
                 for x in self.stack.iter() {
                     print!("['{}']", x);
                 }
-                println!("\n");
-                Disassembler::disassemble_instruction(&self.chunk, self.pc);
             }
 
             let instruction: OpCode = unsafe { std::mem::transmute(self.chunk.code[self.pc]) };

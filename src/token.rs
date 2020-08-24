@@ -1,5 +1,5 @@
 #![allow(non_camel_case_types)]
-
+#[repr(usize)]
 #[derive(Debug, Copy,Clone, PartialEq)]
 pub enum TokenType {
     // Single-character tokens.
