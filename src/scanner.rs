@@ -24,13 +24,11 @@ impl Scanner {
     pub fn scan_token(&mut self) -> Token {
         self.start = self.current;
 
-        
         self.skip_whitespace();
 
         if self.is_end() {
-            return self.generate_token(TokenType::EOF)
+            return self.generate_token(TokenType::EOF);
         }
-
 
         let c = self.advance();
 
@@ -87,9 +85,7 @@ impl Scanner {
     }
     /// checks if scanner.current is at end.
     fn is_end(&self) -> bool {
-        if self.current >= self.source_vec.len() - 1 {
-            return true
-        }
+        
         return self.source_vec[self.current] == '\0';
     }
     fn peek(&self) -> char {
@@ -108,20 +104,18 @@ impl Scanner {
             return false;
         }
 
-            if self.source_vec[self.current] != expected {
-                return false;
-            }
+        if self.source_vec[self.current] != expected {
+            return false;
+        }
 
-            self.current += 1;
-            return true;
-   
+        self.current += 1;
+        return true;
     }
 
     fn skip_whitespace(&mut self) {
         loop {
-      
             let c = self.peek();
-           
+
             match c {
                 ' ' | '\t' | '\r' => {
                     self.advance();
@@ -215,7 +209,7 @@ impl Scanner {
             }
             't' => {
                 if self.current as u8 - self.start as u8 > 1 {
-                    match  self.source_vec[self.current + 1]  {
+                    match self.source_vec[self.current + 1] {
                         'h' => self.check_keyword(2, 2, "is", TokenType::THIS),
                         'r' => self.check_keyword(2, 2, "ue", TokenType::TRUE),
                         _ => return TokenType::IDENTIFIER,
@@ -247,7 +241,7 @@ impl Scanner {
             }
 
             if correct {
-                return token_type
+                return token_type;
             }
         }
 
@@ -260,7 +254,7 @@ impl Scanner {
             start: self.start,
             length: (self.current as usize - self.start as usize),
             line: self.line,
-            message: None
+            message: None,
         }
     }
     /// it advances scanner.current by 1
@@ -275,7 +269,7 @@ impl Scanner {
             start: self.start,
             length: message.len(),
             line: self.line,
-            message: Some(message.to_string())
+            message: Some(message.to_string()),
         }
     }
 }

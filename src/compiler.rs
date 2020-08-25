@@ -4,7 +4,7 @@ use crate::parser::*;
 use crate::token::{TokenType};
 use crate::opcode::OpCode;
 use crate::disassembler::Disassembler;
-
+use crate::value::*;
 pub struct Compiler<'a> { 
     scanner: Scanner,
     parser: Parser,
@@ -35,12 +35,12 @@ impl<'a> Compiler<'a> {
 
     fn advance(&mut self) {
         self.parser.previous = self.parser.current.clone();
-
+     
         loop {
             self.parser.current = self.scanner.scan_token();
             // break when you dont encounter error
-            // println!("{:?}", self.parser.previous);
-
+            
+            
             match self.parser.current.token_type {
                 TokenType::ERROR => {},
                 _ => { break; }
@@ -55,15 +55,15 @@ impl<'a> Compiler<'a> {
     }
 
     fn expression(&mut self ){
-      
+        
         self.parse_precedence(Precedence::ASSIGNMENT);
     }
 
     fn consume(&mut self, token_type: TokenType, message: &str) {
-   
-        if self.parser.current.token_type == token_type {
+        // println!("{:?}", self.parser.current.token_type);
+        if self.parser.current.token_type as usize == token_type as usize {
             self.advance();
-            return
+            return;
         }
         
         self.parser.current.message = Some(message.to_string());
@@ -88,9 +88,12 @@ impl<'a> Compiler<'a> {
     fn emit_return(&mut self) {
         self.emit_byte(OpCode::OpReturn as u8);
     }
-    fn emit_constant(&mut self, value: f64) {
-        let byte2 = self.make_constant(value);
-        self.emit_two_bytes(OpCode::OpConstant as u8, byte2)
+    fn emit_constant(&mut self, value: Value) {
+        if let ValueType::Number(n) = value.value {
+            let byte2 = self.make_constant(n);
+            self.emit_two_bytes(OpCode::OpConstant as u8, byte2)
+        }
+       
     }
     fn make_constant(&mut self, value: f64) -> u8{
         let constant = self.chunk.add_constant(value);
@@ -104,18 +107,22 @@ impl<'a> Compiler<'a> {
 
     fn handle_number(&mut self ){
         let mut string: String = String::new();
-      
+        
         for i in self.parser.previous.start..self.parser.previous.start + self.parser.previous.length {
-            string.push(self.source[i]);
+            if self.source[i] != ' ' {
+                string.push(self.source[i]);
+            }
         }
  
         let value:f64 = string.trim().parse().unwrap();
-        self.emit_constant(value);
+        let value_type = Value::from_float(value);
+        self.emit_constant(value_type);
     }
 
     fn handle_grouping(&mut self) {
         self.expression();
-        self.consume(TokenType::RIGHT_PAREN, "Expected ')' after expression");
+        // this needs to be fixed
+        // self.consume(TokenType::RIGHT_PAREN, "Expected ')' after expression");
     }
 
     fn handle_unary(&mut self) {
@@ -133,51 +140,58 @@ impl<'a> Compiler<'a> {
         let operator_type = self.parser.previous.token_type;
         let rule = self.get_rule(operator_type);
 
-        let precedence = unsafe { std::mem::transmute(rule.precedence as u8 + 1 as u8) };
-       
+        let precedence = unsafe { std::mem::transmute((rule.precedence as u8 + 1) as u8) };
+     
         self.parse_precedence(precedence);
-        
+     
+      
         match operator_type {
             TokenType::PLUS => self.emit_byte(OpCode::OpAdd as u8),
             TokenType::MINUS => self.emit_byte(OpCode::OpSub as u8),
             TokenType::STAR  => self.emit_byte(OpCode::OpMult as u8),
             TokenType::SLASH => self.emit_byte(OpCode::OpDiv as u8),
             TokenType::MOD => self.emit_byte(OpCode::OpMod as u8),
-            _ => {return}
+            _ => {return } 
         }
     }
+
     fn parse_precedence(&mut self, precedence: Precedence) {
+
         self.advance();
    
         let token_type = self.parser.previous.token_type;
         let rule = self.get_rule(token_type);
        
-
+       
         match rule.prefix {
-            ParseFunctions::Binary => self.handle_binary(),
+            ParseFunctions::Binary => {  self.handle_binary() },
             ParseFunctions::Unary =>  { self.handle_unary() },
-            ParseFunctions::Number => self.handle_number(),
-            ParseFunctions::Grouping => self.handle_grouping(),
+            ParseFunctions::Number => {  self.handle_number()},
+            ParseFunctions::Grouping => { self.handle_grouping() },
             _ => { return }
         }
+     
 
         let current_token_type = self.parser.current.token_type;
-
+        // println!("precedence: {:?}, current_token_precedence: {:?}, {:?} ", precedence, self.get_rule(current_token_type), self.parser.current.token_type );
         while precedence as u8 <= self.get_rule(current_token_type).precedence as u8 {
             self.advance();
+          
             let prev_token_type = self.parser.previous.token_type;
             let infix_rule = self.get_rule(prev_token_type);
             match infix_rule.infix {
-                ParseFunctions::Binary => self.handle_binary(),
-                ParseFunctions::Unary => self.handle_unary(),
-                ParseFunctions::Number => self.handle_number(),
-                ParseFunctions::Grouping => self.handle_grouping(),
+                ParseFunctions::Binary => {  self.handle_binary() },
+                ParseFunctions::Unary =>  { self.handle_unary() },
+                ParseFunctions::Number => {  self.handle_number()},
+                ParseFunctions::Grouping => { self.handle_grouping() },
                 _ => { return }
             }
         }  
+       
     }
 
     fn get_rule(&self, token_type: TokenType) ->ParseRule{
+        // println!("{}", token_type as usize);
         self.parser.parse_rules[token_type as usize]
     }
 

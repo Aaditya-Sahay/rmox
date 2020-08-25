@@ -31,7 +31,7 @@ impl Parser {
         }
     }
 }
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 #[repr(u8)]
 pub enum Precedence {
     NONE,
@@ -47,7 +47,7 @@ pub enum Precedence {
     PRIMARY,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum ParseFunctions {
     Grouping,   
     Unary,       
@@ -55,7 +55,7 @@ pub enum ParseFunctions {
     Number, 
     Null,
 }
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct ParseRule {
     pub prefix: ParseFunctions,
     pub infix: ParseFunctions,

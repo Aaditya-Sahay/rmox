@@ -6,6 +6,7 @@ pub mod token;
 pub mod vm;
 pub mod compiler;
 pub mod parser;
+pub mod value;
 // use crate::chunk::Chunk;
 
 // use crate::opcode::OpCode;
