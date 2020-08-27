@@ -1,2 +1,4 @@
 /target
 *.rmox
+.DS_Store
+.env
